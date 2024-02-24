@@ -1,36 +1,38 @@
 "use client";
-
-// import { useUserLoginMutation } from "@/redux/api/authApi";
+import { useUserLoginMutation } from "@/redux/features/api/authApi";
 import Link from "next/link";
+import { useState } from "react";
 
 
 const LoginPage = () => {
-//   const [userLogin, isError] = useUserLoginMutation();
-//   const [inputs, setInputs] = useState({
-//     employeeId: "",
-//     password: "",
-//   });
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setInputs((prevInfo) => ({
-//       ...prevInfo,
-//       [name]: value,
-//     }));
-//   };
+  const {userLogin, isError} = useUserLoginMutation();
+ 
+  const [inputs, setInputs] = useState({
+    employeeId: "",
+    password: "",
+  });
+ 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
 
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-
-//     try {
-//       const res = await userLogin(inputs);
-//       if ("data" in res) {
-//         const re = res?.data;
-//         console.log(re);
-//       }
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const res = await userLogin(inputs);
+      console.log(res);
+      if ("data" in res) {
+        const re = res?.data;
+        console.log(re);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="Banner">
       <div className="mx-auto my-10 max-w-md rounded-xl border px-4 py-10 text-[#4E4E4E] shadow-lg sm:px-8 bg-white">
@@ -44,13 +46,13 @@ const LoginPage = () => {
         </div>
         <div className="mb-6">
           <form 
-        //   onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           
           >
             <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
               <input
                 type="text"
-                // onChange={handleChange}
+                onChange={handleChange}
                 name="employeeId"
                 className="w-full flex-1 appearance-none border-blue-300 bg-white px-4 py-2 text-base text-[#4E4E4E] placeholder-gray-400 focus:outline-none"
                 placeholder="Enter Your employeeId"
@@ -60,7 +62,7 @@ const LoginPage = () => {
             <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
               <input
                 type="password"
-                // onChange={handleChange}
+                onChange={handleChange}
                 id="password"
                 name="password"
                 className="w-full flex-1 appearance-none border-blue-300 bg-white px-4 py-2 text-base text-[#4E4E4E] placeholder-gray-400 focus:outline-none"

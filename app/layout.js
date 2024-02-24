@@ -1,14 +1,17 @@
-import './globals.css';
+"use client";
 
-export const metadata = {
-  title: 'MAAC',
-  description: 'job-task',
-};
+import { store } from "@/redux/store";
+import { Provider } from "react-redux";
+import "./globals.css";
+
+
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <Provider store={store}>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </Provider>
   );
 }
