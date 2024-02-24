@@ -1,13 +1,13 @@
 "use client";
+import { useRegisterMutation } from '@/redux/features/api/authApi';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-import { useRegisterMutation } from "@/redux/features/api/authApi";
-import Link from "next/link";
-import { useState } from "react";
-
-const page = () => {
-  const {data, isLoading, isError} = useRegisterMutation();
-  console.log(data);
-  
+const Page = () => {
+  const router = useRouter();
+  const [createUser] = useRegisterMutation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [employeeId, setEmployeeId] = useState("");
@@ -16,8 +16,8 @@ const page = () => {
   const [role, setRole] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const registerHandler = () => {
-    console.log({
+  const registerHandler = async () => {
+    const RegisterData = {
       name,
       email,
       employeeId,
@@ -25,42 +25,14 @@ const page = () => {
       passwordConfirm,
       role,
       phoneNumber,
-    });
+    };
+    const res = await createUser(RegisterData);
+    if (res?.data?.token) {
+      
+      router.push("/login");
+      toast("Registration Sucessfull!");
+    }
   };
-
-  // const [regData, setRegData] = useState({
-  //   name: "",
-  //   email: "",
-  //   employeeId: "",
-  //   password: "",
-  //   passwordConfirm: "",
-  //   role: "",
-  //   phoneNumber: "",
-  // });
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setRegData((regInfo) => ({
-  //     ...regInfo,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // console.log("data-->", regData);
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await register(regData);
-  //     console.log(res);
-  //     if ("data" in res) {
-  //       const response = res?.data;
-  //       console.log("data", response);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return (
     <>
@@ -76,7 +48,7 @@ const page = () => {
           </div>
           <div>
             <div className="mb-6">
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setName(e.target.value)}
                   value={name}
@@ -86,7 +58,7 @@ const page = () => {
                   placeholder="Enter Your Full Name"
                 />
               </div>
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
@@ -96,7 +68,7 @@ const page = () => {
                   placeholder="Enter Your Email"
                 />
               </div>
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setEmployeeId(e.target.value)}
                   value={employeeId}
@@ -107,7 +79,7 @@ const page = () => {
                 />
               </div>
 
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
@@ -117,7 +89,7 @@ const page = () => {
                   placeholder="Password (min 8 character)"
                 />
               </div>
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setPasswordConfirm(e.target.value)}
                   value={passwordConfirm}
@@ -127,7 +99,7 @@ const page = () => {
                   placeholder="Confirm Password"
                 />
               </div>
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setRole(e.target.value)}
                   value={role}
@@ -138,7 +110,7 @@ const page = () => {
                 />
               </div>
 
-              <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+              <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
                 <input
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   value={phoneNumber}
@@ -152,7 +124,7 @@ const page = () => {
             <button
               onClick={registerHandler}
               type="submit"
-              className="w-full mb-6 rounded-xl bg-blue-600 px-8 py-3 font-medium text-white hover:bg-blue-700"
+              className="w-full px-8 py-3 mb-6 font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700"
             >
               Create Account
             </button>
@@ -162,7 +134,7 @@ const page = () => {
               Already have an account?
               <Link
                 href="/login"
-                className="font-medium text-blue-600 hover:underline cursor-pointer"
+                className="font-medium text-blue-600 cursor-pointer hover:underline"
               >
                 Log in
               </Link>
@@ -174,4 +146,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

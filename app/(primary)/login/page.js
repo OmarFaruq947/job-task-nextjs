@@ -1,37 +1,58 @@
-"use client";
-import { useUserLoginMutation } from "@/redux/features/api/authApi";
+"use client";  
 import Link from "next/link";
-import { useState } from "react";
-
+import { useState } from "react"; 
+import { useUserLoginMutation } from "@/redux/features/api/authApi";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
-  const {userLogin, isError} = useUserLoginMutation();
+  const [employeeId, setEmployeeId] = useState()
+  const [password, setPassword] = useState()
+  
+  const [loginUser] = useUserLoginMutation() 
+  const router = useRouter();
+  
  
-  const [inputs, setInputs] = useState({
-    employeeId: "",
-    password: "",
-  });
- 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputs((prevInfo) => ({
-      ...prevInfo,
-      [name]: value,
-    }));
-  };
+  // const registerHandler = async () => {
+  //   const RegisterData = {
+  //     name,
+  //     email,
+      // employeeId,
+  //     password,
+  //     passwordConfirm,
+  //     role,
+  //     phoneNumber,
+  //   };
+  //   const res = await createUser(RegisterData);
+  //   if (res?.data?.token) {
+  //     console.log("register hoise");
+  //     router.push("/login");
+  //     toast("Registration Sucessfull!");
+  //   }
+  // };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const res = await userLogin(inputs);
-      console.log(res);
-      if ("data" in res) {
-        const re = res?.data;
-        console.log(re);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    
+    const loginData = {employeeId, password};
+    event.preventDefault(); 
+    fetch("https://staging-api.erpxbd.com/api/v1/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "employeeId": "aaa",
+        "password": "11111111"
+    }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if(data?.token){
+          router.push("/dashboard/region");
+          toast("Login Sucessfull!");
+        }
+      }) 
+     
   };
   return (
     <div className="Banner">
@@ -49,20 +70,22 @@ const LoginPage = () => {
           onSubmit={handleSubmit}
           
           >
-            <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+            <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
               <input
                 type="text"
-                onChange={handleChange}
+                onChange={(e) => setEmployeeId(e.target.value)}
                 name="employeeId"
+                value={employeeId}
                 className="w-full flex-1 appearance-none border-blue-300 bg-white px-4 py-2 text-base text-[#4E4E4E] placeholder-gray-400 focus:outline-none"
                 placeholder="Enter Your employeeId"
               />
             </div>
 
-            <div className="focus-within:border-b-blue-500 relative mb-3 flex overflow-hidden border-b-2 transition">
+            <div className="relative flex mb-3 overflow-hidden transition border-b-2 focus-within:border-b-blue-500">
               <input
                 type="password"
-                onChange={handleChange}
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
                 id="password"
                 name="password"
                 className="w-full flex-1 appearance-none border-blue-300 bg-white px-4 py-2 text-base text-[#4E4E4E] placeholder-gray-400 focus:outline-none"
@@ -72,7 +95,7 @@ const LoginPage = () => {
 
             <button
               type="submit"
-              className="w-full mb-6 rounded-xl bg-blue-600 px-8 py-3 font-medium text-white hover:bg-blue-700"
+              className="w-full px-8 py-3 mb-6 font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700"
             >
               Sign in
             </button>
@@ -84,7 +107,7 @@ const LoginPage = () => {
             Do not have any account?
             <Link
               href="/registration"
-              className="font-medium text-blue-600 hover:underline cursor-pointer"
+              className="font-medium text-blue-600 cursor-pointer hover:underline"
             >
               Sign Up
             </Link>
